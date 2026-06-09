@@ -1,0 +1,7 @@
+{
+    "require": {
+        "flightphp/core": "^3.18",
+        "fzaninotto/faker": "^1.5",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
