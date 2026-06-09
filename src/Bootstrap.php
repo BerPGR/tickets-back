@@ -4,10 +4,10 @@ Flight::set('config', [
     'origin' => 'http://localhost:4300',
     'db' => [
         'driver' => 'mysql',
-        'host' => 'localhost',
+        'host' => '127.0.0.1',
         'database' => 'tickets',
         'username' => 'root',
-        'password' => ''
+        'password' => 'Senha123!'
     ]
 ]);
 
@@ -23,7 +23,7 @@ Flight::before('start', function () {
 $config = Flight::get('config');
 
 Flight::register('db', \flight\database\SimplePdo::class, [
-    "{$config['db']['driver']}:host={$config['db']['host']};dbname={$config['db']['database']}", $config['db']['username'], "", [
+    "{$config['db']['driver']}:unix_socket=/var/run/mysqld/mysqld.sock;dbname={$config['db']['database']}", $config['db']['username'], $config['db']['password'], [
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
