@@ -15,7 +15,7 @@ Flight::before('start', function () {
     header("Access-Control-Allow-Origin: *");
     header("Access-Controll-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
 
-    if ($_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+    if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "OPTIONS") {
         exit();
     }
 });
