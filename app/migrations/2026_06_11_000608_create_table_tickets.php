@@ -1,7 +1,8 @@
+
 <?php
 
 return new class {
-    public function up(PDO $pdo) {
+public function up(PDO $pdo) {
         $pdo->exec("
             CREATE TABLE IF NOT EXISTS tickets (
                 id INT AUTO_INCREMENT PRIMARY KEY,

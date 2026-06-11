@@ -6,6 +6,7 @@ class MigrationRunner {
     }
 
     private function ensureMigrationsTable() {
+        $this->ensureTicketsTable();
         $this->pdo->exec(
             "
             CREATE TABLE IF NOT EXISTS migrations (
@@ -17,7 +18,11 @@ class MigrationRunner {
         );
     }
 
-    public function run(string $migrationsPath) {
+    private function ensureTicketsTable() {
+        $this->pdo->exec("CREATE DATABASE IF NOT EXISTS tickets");
+    }
+
+    public function run(string $migrationsPath, ?callable $onMigration = null) {
         $files = glob($migrationsPath . "/*.php");
         sort($files);
 
@@ -33,7 +38,9 @@ class MigrationRunner {
             $stmt = $this->pdo->prepare("INSERT INTO migrations (migration) VALUES (?)");
             $stmt->execute([$name]);
 
-            echo "Ran: $name\n";
+            if ($onMigration) {
+                $onMigration($name);
+            }
         }
     }
 
