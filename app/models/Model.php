@@ -89,5 +89,30 @@ abstract class Model
     private function queryBuilder(string $select = '*') {
         $table = static::$table;
         $sql = "SELECT $select FROM $table";
+        $params = [];
+
+        $wheres = $this->instanceWheres;
+        if (!empty($wheres)) {
+            $clauses = [];
+            foreach ($wheres as $w) {
+                if ($w['val'] === null) {
+                    $clauses[] = "{$w['col']} {$w['op']} NULL";
+                } else {
+                    $clauses[] = "{$w['col']} {$w['op']} ?";
+                    $params[] = $w['val']; 
+                }
+            }
+            $sql .= " WHERE " . implode(" AND ", $clauses);
+        }
+
+        if (!empty($this->instanceOrders)) {
+            $sql .= " ORDER BY " . implode(", ", $this->instanceOrders);
+        }
+
+        if (!empty($this->instanceLimits)) {
+            $sql .= " LIMIT " . $this->instanceLimits;
+        }
+
+        return [$sql, $params];
     }
 }
