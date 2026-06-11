@@ -7,8 +7,9 @@ abstract class Model
     protected static array $hidden = ['password_hash'];
     protected static array $attributes = [];
     protected static array $dirty = [];
+    protected bool $exists = false;
 
-    protected static bool $timestamps = false;
+    protected static bool $timestamps = true;
     protected static array $instanceWheres = [];
     private ?int $instanceLimits = null;
     private ?array $instanceOrders = null;
@@ -150,5 +151,52 @@ abstract class Model
         $stmt = static::db()->prepare($sql);
         $stmt->execute($params);
         return (int) $stmt->fetchColumn();
+    }
+
+    public function save(): bool
+    {
+        if (static::$timestamps) {
+            $now = date("Y-m-d H:i:s");
+            if (!$this->exists) {
+                $this->attributes['created_at'] = $now;
+            }
+            $this->attributes['updated_at'] = $now;
+            $this->dirty['updated_at'] = $now;
+        }
+        return $this->exists ? $this->update() : $this->insert();
+    }
+
+    public function update(): bool
+    {
+        if (empty($this->dirty)) return true;
+
+        $sets = implode(', ', array_map(fn($k) => "`$k` = ?", array_keys($this->dirty)));
+        $sql = "UPDATE " . static::$table . " SET $sets WHERE " . static::$primaryKey . " = ?";
+        $params = [...array_values($this->dirty), $this->attributes[static::$primaryKey]];
+        
+        $result = static::db()->prepare($sql)->execute($sql);
+        if ($result) $this->dirty = [];
+        return $result;
+    }
+
+    public function insert(): bool {
+        $data = $this->attributes;
+        $columns = implode("`, `", array_keys($data));
+        $placeholders = implode(", ", array_fill(0, count($data), "?"));
+        $sql = "INSERT INTO " . static::$table . " (`$columns`) VALUES ($placeholders)";
+        $stmt = static::db()->prepare($sql);
+        $result = $stmt->execute(array_values($data));
+        if ($result) {
+            $this->attributes[static::$primaryKey] = static::db()->lastInsertedId();
+            $this->exists = true;
+            $this->dirty = [];
+        }
+        return $result;
+    }
+
+    public static function create(array $attributes): static {
+        $instance = new static($attributes);
+        $instance->save();
+        return $instance;
     }
 }
