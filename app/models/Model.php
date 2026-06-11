@@ -115,4 +115,40 @@ abstract class Model
 
         return [$sql, $params];
     }
+
+    public function get(): array
+    {
+        [$sql, $params] = $this->queryBuilder();
+        $stmt = static::db()->prepare($sql);
+        $stmt->execute($params);
+        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(function ($row) {
+            $obj = new static($row);
+            return $obj;
+        }, $rows);
+    }
+
+    public function first(): ?static
+    {
+        $this->instanceLimits = 1;
+        $results = $this->get();
+        return $results[0] ?? null;
+    }
+
+    public static function find(int $id): static
+    {
+        return static::where(static::$primaryKey,"=", $id)->first();
+    }
+
+    public static function all(): array {
+        return (new static)->get();
+    }
+
+    public function count(): int {
+        [$sql, $params] = $this->queryBuilder("COUNT(*) as aggregate");
+        $stmt = static::db()->prepare($sql);
+        $stmt->execute($params);
+        return (int) $stmt->fetchColumn();
+    }
 }
