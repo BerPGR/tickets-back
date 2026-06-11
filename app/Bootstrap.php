@@ -1,13 +1,16 @@
 <?php
 
+$dotenv = \Dotenv\Dotenv::createImmutable(__DIR__. "/../");
+$dotenv->safeLoad();
+
 Flight::set('config', [
     'origin' => 'http://localhost:4300',
     'db' => [
-        'driver' => 'mysql',
-        'host' => '127.0.0.1',
-        'database' => 'tickets',
-        'username' => 'root',
-        'password' => 'Senha123!'
+        'driver' => $_ENV['DB_DRIVER'],
+        'host' => $_ENV['DB_HOST'],
+        'database' => $_ENV['DB_NAME'],
+        'username' => $_ENV['DB_USERNAME'],
+        'password' => $_ENV['DB_PASSWORD']
     ]
 ]);
 
