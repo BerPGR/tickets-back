@@ -178,7 +178,7 @@ abstract class Model
         $sql = "UPDATE " . static::$table . " SET $sets WHERE " . static::$primaryKey . " = ?";
         $params = [...array_values($this->dirty), $this->attributes[static::$primaryKey]];
         
-        $result = static::db()->prepare($sql)->execute($sql);
+        $result = static::db()->prepare($sql)->execute($params);
         if ($result) $this->dirty = [];
         return $result;
     }
