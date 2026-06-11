@@ -25,4 +25,14 @@ class TeamsController
             $this->app->error($e);
         }
     }
+
+    public function getAll() {
+        try {
+            $teams = Teams::all();
+            $teams = array_map(fn($team) => $team->toArray(), $teams);
+            $this->app->json($teams, 200);
+        } catch (\Throwable $e) {
+            $this->app->error($e);
+        }
+    }
 }

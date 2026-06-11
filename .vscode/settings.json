@@ -1,6 +1,9 @@
 {
     "php.version": "8.4",
     "github.copilot.enable": {
-        "*": false
+        "*": true,
+        "plaintext": false,
+        "markdown": false,
+        "scminput": false
     }
 }

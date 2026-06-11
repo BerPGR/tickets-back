@@ -5,3 +5,5 @@ Flight::route("GET /", function () {
 });
 
 Flight::route("GET /teams/@id", [app\controllers\TeamsController::class, 'getById']);
+
+Flight::route("GET /teams", [app\controllers\TeamsController::class, 'getAll']);
