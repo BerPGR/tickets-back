@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'flight\\' => array($vendorDir . '/flightphp/runway/src'),
+    'app\\' => array($baseDir . '/app'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),

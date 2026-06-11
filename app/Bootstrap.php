@@ -33,4 +33,17 @@ Flight::register('db', \flight\database\SimplePdo::class, [
     ]
 ]);
 
+Flight::map('error', function(\Throwable $e) {
+  Flight::response()->header('Access-Control-Allow-Origin', 'http://localhost:4200');
+  Flight::response()->header('Access-Control-Allow-Credentials', 'true');
+  $body = [
+    'error' => true,
+    'message' => $e->getMessage(),
+    'type' => get_class($e),
+    'file' => $e->getFile(),
+    'line' => $e->getLine()
+  ];
+  Flight::json($body, 500);
+});
+
 require_once __DIR__ . "/Routes.php";

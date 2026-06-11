@@ -19,6 +19,10 @@ class ComposerStaticInitd61a0cb6fcf6ab3ffe7746c206409094
         array (
             'flight\\' => 7,
         ),
+        'a' =>
+        array (
+            'app\\' => 4,
+        ),
         'S' =>
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
@@ -55,6 +59,10 @@ class ComposerStaticInitd61a0cb6fcf6ab3ffe7746c206409094
         'flight\\' =>
         array (
             0 => __DIR__ . '/..' . '/flightphp/runway/src',
+        ),
+        'app\\' =>
+        array (
+            0 => __DIR__ . '/../..' . '/app',
         ),
         'Symfony\\Polyfill\\Php80\\' =>
         array (

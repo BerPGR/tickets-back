@@ -1,16 +1,20 @@
 <?php
 
+namespace app\models;
+use Flight;
+use PDO;
+
 abstract class Model
 {
     protected static string $table = "";
-    protected static string $primaryKey = "";
+    protected static string $primaryKey = "id";
     protected static array $hidden = ['password_hash'];
-    protected static array $attributes = [];
-    protected static array $dirty = [];
+    protected array $attributes = [];
+    protected array $dirty = [];
     protected bool $exists = false;
 
     protected static bool $timestamps = true;
-    protected static array $instanceWheres = [];
+    protected array $instanceWheres = [];
     private ?int $instanceLimits = null;
     private ?array $instanceOrders = null;
 
