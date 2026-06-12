@@ -8,7 +8,7 @@ abstract class Model
 {
     protected static string $table = "";
     protected static string $primaryKey = "id";
-    protected static array $hidden = ['password_hash'];
+    protected static array $hidden = [];
     protected array $attributes = [];
     protected array $dirty = [];
     protected bool $exists = false;
@@ -34,7 +34,7 @@ abstract class Model
 
     public function toArray(): array
     {
-        return $this->attributes;
+        return array_diff_key($this->attributes, array_flip(static::$hidden));
     }
 
     public function __get(string $key)
