@@ -34,7 +34,7 @@ Flight::register('db', \flight\database\SimplePdo::class, [
 ]);
 
 Flight::map('error', function(\Throwable $e) {
-  Flight::response()->header('Access-Control-Allow-Origin', 'http://localhost:4200');
+  Flight::response()->header('Access-Control-Allow-Origin', '*');
   Flight::response()->header('Access-Control-Allow-Credentials', 'true');
   $body = [
     'error' => true,

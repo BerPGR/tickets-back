@@ -126,7 +126,7 @@ abstract class Model
         [$sql, $params] = $this->queryBuilder();
         $stmt = static::db()->prepare($sql);
         $stmt->execute($params);
-        $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $rows = $stmt->fetchAll();
 
         return array_map(function ($row) {
             $obj = new static($row);
