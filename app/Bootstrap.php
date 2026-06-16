@@ -26,7 +26,7 @@ Flight::before('start', function () {
 $config = Flight::get('config');
 
 Flight::register('db', \flight\database\SimplePdo::class, [
-    "{$config['db']['driver']}:unix_socket=/var/run/mysqld/mysqld.sock;dbname={$config['db']['database']}", $config['db']['username'], $config['db']['password'], [
+    "{$config['db']['driver']}:host={$config['db']['host']};dbname={$config['db']['database']}", $config['db']['username'], $config['db']['password'], [
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES => false,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
