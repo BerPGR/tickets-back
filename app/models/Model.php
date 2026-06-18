@@ -191,7 +191,7 @@ abstract class Model
         $stmt = static::db()->prepare($sql);
         $result = $stmt->execute(array_values($data));
         if ($result) {
-            $this->attributes[static::$primaryKey] = static::db()->lastInsertedId();
+            $this->attributes[static::$primaryKey] = static::db()->lastInsertId();
             $this->exists = true;
             $this->dirty = [];
         }
