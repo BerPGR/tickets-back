@@ -37,7 +37,7 @@ abstract class Model
 
     public function toArray(): array
     {
-        return array_diff_key($this->attributes, array_flip(static::$hidden));
+        return $this->attributes;
     }
 
     public function __get(string $key)
