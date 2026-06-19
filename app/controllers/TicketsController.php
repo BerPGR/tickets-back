@@ -19,9 +19,21 @@ class TicketsController
         $this->app = \Flight::app();
     }
 
-    public function show() {
-        $tickets = \app\models\Tickets::all();
-        $this->app->json($tickets);
+    public function show(int $userId) {
+        try {
+            $tickets = (new \app\models\Tickets)->select("
+                t.id as id, title, te.name as team, status, c.name as client, priority, due_date, t.created_at as created_at, u_owner.name as owner, u_user.name as responsable
+            ")
+            ->join("clients c", "c.id", '=', "t.client_id")
+            ->join("teams te", 'te.id', "=", "t.team_id")
+            ->join("users u_owner", "t.owner_id", "=", "u_owner.id")
+            ->join("users u_user", "t.user_id", "=", "u_user.id")
+            ->andWhere("t.owner_id", "=", $userId)->get();
+            $tickets = array_map(fn($ticket) => $ticket->toArray(), $tickets);
+            $this->app->json($tickets);
+        } catch (\Throwable $e) {
+            $this->app->error($e);
+        }
     }
 
     public function store() {

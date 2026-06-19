@@ -12,5 +12,5 @@ Flight::route("GET /clients", [app\controllers\ClientsController::class, "index"
 
 Flight::route("GET /users", [app\controllers\UsersController::class, "index"]);
 
-Flight::route("GET /tickets", [app\controllers\TicketsController::class, "show"]);
+Flight::route("GET /users/@userId/tickets", [app\controllers\TicketsController::class, "show"]);
 Flight::route("POST /tickets", [app\controllers\TicketsController::class, 'store']);

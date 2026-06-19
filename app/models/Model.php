@@ -2,11 +2,11 @@
 
 namespace app\models;
 use Flight;
-use PDO;
 
 abstract class Model
 {
     protected static string $table = "";
+    protected static string $tableAlias = "";
     protected static string $primaryKey = "id";
     protected static array $hidden = [];
     protected array $attributes = [];
@@ -15,6 +15,8 @@ abstract class Model
 
     protected static bool $timestamps = true;
     protected array $instanceWheres = [];
+    protected array $instanceJoins = [];
+    protected string $instanceSelect = '*';
     private ?int $instanceLimits = null;
     private ?array $instanceOrders = null;
 
@@ -25,6 +27,7 @@ abstract class Model
 
     public function fill(array $attributes): static
     {
+        $this->attributes = [];
         foreach ($attributes as $key => $value) {
             $this->attributes[$key] = $value;
         }
@@ -59,6 +62,19 @@ abstract class Model
     }
 
     // Funções de banco
+    public function select(string $columns): static 
+    {
+        $instance = new static();
+        $instance->instanceSelect = $columns;
+        return $instance;
+    }
+
+    public function join(string $table, string $first, string $operator, string $second, string $type = 'INNER'): static 
+    {
+        $this->instanceJoins[] = "$type JOIN $table ON $first $operator $second";
+        return $this;
+    }
+
     public static function where(string $column, string $op, mixed $value = null): static 
     {
         if ($value === null) {
@@ -91,10 +107,16 @@ abstract class Model
         return $this;
     }
 
-    private function queryBuilder(string $select = '*') {
+    private function queryBuilder() {
         $table = static::$table;
-        $sql = "SELECT $select FROM $table";
+        $alias = static::$tableAlias;
+        $select = $this->instanceSelect;
+        $sql = "SELECT $select FROM $table $alias ";
         $params = [];
+
+        if (!empty($this->instanceJoins)) {
+            $sql .= implode(' ', $this->instanceJoins);
+        }
 
         $wheres = $this->instanceWheres;
         if (!empty($wheres)) {
@@ -126,7 +148,7 @@ abstract class Model
         [$sql, $params] = $this->queryBuilder();
         $stmt = static::db()->prepare($sql);
         $stmt->execute($params);
-        $rows = $stmt->fetchAll();
+        $rows = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
         return array_map(function ($row) {
             $obj = new static($row);

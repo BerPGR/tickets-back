@@ -4,7 +4,7 @@ $dotenv = \Dotenv\Dotenv::createImmutable(__DIR__. "/../");
 $dotenv->safeLoad();
 
 Flight::set('config', [
-    'origin' => 'http://localhost:4300',
+    'origin' => 'http://localhost:4200',
     'db' => [
         'driver' => $_ENV['DB_DRIVER'],
         'host' => $_ENV['DB_HOST'],
@@ -16,9 +16,12 @@ Flight::set('config', [
 
 Flight::before('start', function () {
     header("Access-Control-Allow-Origin: *");
-    header("Access-Controll-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
+    header("Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS");
+    header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
+    header("Access-Control-Allow-Credentials: true");
 
     if (isset($_SERVER['REQUEST_METHOD']) && $_SERVER['REQUEST_METHOD'] == "OPTIONS") {
+        http_response_code(200);
         exit();
     }
 });
