@@ -41,7 +41,7 @@ class TicketsController
             $data = $this->app->request()->data->getData();
             $dueDate = implode("-", explode("/", $data['dueDate']));
             $ticket = [
-                "owner_id" => $data['dueUser']['id'],
+                "owner_id" => $data['owner_id'],
                 "user_id" => $data['dueUser']['id'],
                 "title" => $data["titulo"],
                 "description" => $data['description'],
